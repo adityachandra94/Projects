@@ -1,0 +1,623 @@
+AC_04_SQL>Start "C:\Users\adity\OneDrive\Desktop\AIT\SQL Project\Holiday_Cottage_Rental.sql"
+AC_04_SQL> /* Aditya Chandra */
+AC_04_SQL> /* A00268811  */
+AC_04_SQL> /* Holiday Cottage Rental - Relational Databases Project */
+AC_04_SQL> /* Year 5 (2019), M.Sc. in Data Analytics */
+AC_04_SQL>
+AC_04_SQL>Clear Screen
+
+AC_04_SQL>
+AC_04_SQL>Set Termout On
+AC_04_SQL>Set Echo On
+AC_04_SQL>Set Feedback On
+AC_04_SQL>Set Verify On
+AC_04_SQL>Set Heading on
+AC_04_SQL>Set Pagesize 100
+AC_04_SQL>Set Linesize 180
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Cottage_Cleaning;
+
+Table dropped.
+
+AC_04_SQL>Drop Table	  Caretaker;
+
+Table dropped.
+
+AC_04_SQL>Drop Table	  Cottage_Rental;
+
+Table dropped.
+
+AC_04_SQL>Drop Table	  Cottage;
+
+Table dropped.
+
+AC_04_SQL>Drop Table	  Proprietor;
+
+Table dropped.
+
+AC_04_SQL>Drop Table	  Tourist;
+
+Table dropped.
+
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Tourist;
+Drop Table 	Tourist
+           	*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+AC_04_SQL>Create Table	  Tourist(
+  2  Tourist_Id      Number (2)      ,
+  3  FirstName	     Varchar2 (10) Constraint Tourist_FirstName_Nn Not Null,
+  4  LastName	     Varchar2 (10) Constraint Tourist_LastName_Nn Not Null,
+  5  Address	     Varchar2 (20),
+  6  Nationality Varchar2 (7),
+  7  Telephone_No     Number (10),
+  8  Email_Address    Varchar2 (25),
+  9  Special_Needs    Varchar2 (17)  ,
+ 10  Pay_Method       Varchar2 (11),
+ 11  Constraint Tourist_Tourist_Id_Pk	     Primary Key (Tourist_Id),
+ 12  Constraint Tourist_Telephone_No_Uq      Unique (Telephone_No),
+ 13  Constraint Tourist_Email_Address_Uq Unique (Email_Address),
+ 14  Constraint Tourist_Pay_Method_Ck	     Check (Pay_Method In ('Cash', 'Cheque', 'Credit Card')));
+
+Table created.
+
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Proprietor;
+Drop Table 	Proprietor
+           	*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+AC_04_SQL>Create Table	  Proprietor(
+  2  	     Proprietor_Id    Number (4),
+  3  	     Fname    Varchar2 (9)				     Constraint Proprietor_FName_Nn Not Null,
+  4  	     Sname    Varchar2 (10)				     Constraint Proprietor_SName_Nn Not Null,
+  5  	     Address  Varchar2 (22),
+  6  	     County   Varchar2 (7),
+  7  	     Date_Of_Birth    Date,
+  8  	     Email    Varchar2 (27),
+  9  	     Mobile_No	      Number (10),
+ 10  	     Foreign_Language	      Varchar2 (7),
+ 11  	     Constraint Proprietor_Proprietor_Id_Pk  Primary Key (Proprietor_Id),
+ 12  	     Constraint Proprietor_Email_Uq		     Unique (Email),
+ 13  	     Constraint Proprietor_Mobile_No_Uq 	     Unique (Mobile_No));
+
+Table created.
+
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Cottage;
+Drop Table 	Cottage
+           	*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+AC_04_SQL>Create Table	  Cottage(
+  2  	     Cottage_Id 	     Number (3),
+  3  	     Cottage_Address Varchar2 (21),
+  4  	     Town		     Varchar2 (10),
+  5  	     County		     Varchar2	     (9),
+  6  	     Proprietor_Id   Number  (4),
+  7  	     Grade		     Varchar2	     (6)			     Constraint Cottage_Grade_Nn Not Null,
+  8  	     Special_Features	      Varchar2 (8),
+  9  	     Num_Bedrooms    Number  (2),
+ 10  	     Heating		     Varchar2 (10),
+ 11  	     Year_Built 	     Number  (4),
+ 12  	     Type		     Varchar2 (10),
+ 13  	     Cost		     Number (4),
+ 14  	     Market_Value    Number (4),
+ 15  	     Constraint Cottage_Proprietor_Id_Fk     Foreign Key (Proprietor_Id) References Proprietor (Proprietor_Id),
+ 16  	     Constraint Cottage_Cottage_Id_Pk		     Primary Key (Cottage_Id),
+ 17  	     Constraint Cottage_Special_Features_Ck  Check (Special_Features In ('TV', 'Internet', 'Sauna')),
+ 18  	     Constraint Cottage_Heating_Ck		     Check (Heating In ('Oil', 'Gas', 'Solid Fuel')),
+ 19  	     Constraint Cottage_Type_Ck 			     Check (Type In ('Dormer', 'Bungalow', 'Two Storey')));
+
+Table created.
+
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Cottage_Rental;
+Drop Table 	Cottage_Rental
+           	*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+AC_04_SQL>Create Table	  Cottage_Rental  (
+  2  	     Cottage_Id       Number (3),
+  3  	     Rental_Date      Date						     Constraint Cottage_Rental_Rental_Date_Nn Not Null,
+  4  	     Num_Nights       Number (2)					     Constraint Cottage_Rental_Num_Nights_Nn Not Null,
+  5  	     Num_Guests       Number (2)					     Constraint Cottage_Rental_Num_Guests_Nn Not Null,
+  6  	     Total_Due	      Number (3),
+  7  	     Deposit_Paid     Number (2),
+  8  	     Pay_Method       Varchar2	     (11),
+  9  	     Tourist_Id       Number (2),
+ 10  	     Constraint Cottage_Rental_Cottage_Id_Fk	     Foreign Key (Cottage_Id) References Cottage (Cottage_Id),
+ 11  	     Constraint Cottage_Rental_Tourist_Id_Fk	     Foreign Key (Tourist_Id) References Tourist (Tourist_Id),
+ 12  	     Constraint Cottage_Rental_Pay_Method_Ck	     Check (Pay_Method In ('Cash', 'Cheque', 'Credit Card')));
+
+Table created.
+
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Caretaker;
+Drop Table 	Caretaker
+           	*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+AC_04_SQL>Create Table	Caretaker(
+  2  	     Caretaker_Id    Number (4),
+  3  	     Firstname		     Varchar2 (7)		     Constraint Caretaker_Firstname_Nn Not Null,
+  4  	     Surname		     Varchar2 (9)		     Constraint Caretaker_Surname_Nn Not Null,
+  5  	     Address		     Varchar2 (19),
+  6  	     Town		     Varchar2 (9),
+  7  	     County		     Varchar2 (9),
+  8  	     Nationality	     Varchar2 (7),
+  9  	     Mobile_No		     Number (10),
+ 10  	     Email_Address   Varchar2 (31),
+ 11  	     Hourly_Rate	     Number (2),
+ 12  	     Constraint Caretaker_Caretaker_Id_Pk    Primary Key (Caretaker_Id),
+ 13  	     Constraint Caretaker_Mobile_No_Uq		     Unique (Mobile_No),
+ 14  	     Constraint Caretaker_Email_Address_Uq   Unique (Email_Address));
+
+Table created.
+
+AC_04_SQL>
+AC_04_SQL>Drop Table	  Cottage_Cleaning;
+Drop Table 	Cottage_Cleaning
+           	*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+AC_04_SQL>Create Table	  Cottage_Cleaning(
+  2  	     Cottage_Id 	     Number  (3),
+  3  	     Caretaker_Id    Number  (4),
+  4  	     Date_Cleaned    Date,
+  5  	     Time_Taken 	     Number  (2)     ,
+  6  	     Details		     Varchar2 (20) ,
+  7  	     Constraint Cottage_Cleaning_Cottage_Id_Fk	     Foreign Key (Cottage_Id) References Cottage (Cottage_Id),
+  8  	     Constraint CC_Caretaker_Id_Fk			     Foreign Key (Caretaker_Id) References Caretaker (Caretaker_Id));
+
+Table created.
+
+AC_04_SQL>
+AC_04_SQL> /* Table Name: Tourist   */
+AC_04_SQL> /* Tourist_Id, FirstName,	  Lastname,	  Address,	  Nationality,	  Telephone_No,   Email_Address,  Special_Needs,  Pay_Method	  */
+AC_04_SQL>Insert Into Tourist	   Values(1, 'Desirae', 'Peck', '3966 Aliquet. Av.', 'German', 8337292640, 'Dese_Peck@sitamet.org', 'Extra bed', 'Cheque');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(2, 'Mercedes', 'Rasemussen', '6943 Tempus Av.', 'French', 7215847686, 'Merc_Rasmu@enim.net', 'Wheelchair', 'Cheque');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(3, 'Rina', 'English', '2420 Semper Rd.', 'Irish', 4715423628, 'R_English@egestas.net', 'Extra bed', 'Cash');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(4, 'Lyle', 'Boyer', '5718 Ante Ave', 'German', 5266592878, 'Lyle_Br@Crassed.com', 'Extra bed', 'Cheque');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(5, 'Jada', 'Maxwell', '7181 Trist Avenue', 'Italian', 4907498568, 'Jada_Max@dictum.net', NULL, 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(6, 'Raya', 'Hall', '92 Eleifend Rd.', 'Irish', 9142515033, 'Raya_Hall@Nulla.org', 'Vehicle with ramp', 'Cash');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(7, 'Vanna', 'Alvarez', '4596 Sit Rd.', 'German', 2174944039, 'Van_Alvarez@vulputa.ca', 'Vehicle with ramp', 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(8, 'Wesley', 'Berg', '3460 Enim, Rd.', 'British', 9326779684, 'Wes_Berg@nectem.net', NULL, 'Cheque');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(9, 'Ashely', 'Bolton', '368 Molestie St.', 'German', 4609697717, 'Ash_Bolt@mussit.com', NULL, 'Cash');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(10, 'Mohammad', 'Wheeler', '1934 Quisque Road', 'British', 9988096309, 'Wheeler@atarcu.org', 'Tour guide', 'Cash');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(11, 'Quinttessa', 'Morton', '9216 Quam. Rd.', 'Irish', 7124517004, 'Q_Morton@dolorvit.ca', 'Extra bed', 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(12, 'Julian', 'Blackwell', '9645 In St.', 'British', 6706703498, 'Julian@vulputi.edu', 'Wheelchair', 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(13, 'Ivan', 'Grimes', '8421 Nunc Ave', 'German', 5179841869, 'Ivan_Grimes@vlorem.com', NULL, 'Cash');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(14, 'Karen', 'Thornton', '9411 Euismode Street', 'Irish', 7778492771, 'Karen_Thornton@infelis.ca',NULL, 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(15, 'Joan', 'Logan', '8657 Nunc Street', 'British', 3513894564, 'Joan_Logan@hendrer.edu', NULL, 'Cheque');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(16, 'Florence', 'Mckenzie', '96 Diam St.', 'French', 6078715616, 'Flo_Mckenzie@arcuSed.com', NULL, 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist	   Values(17, 'Nita', 'Graves', '990 Nullam Rd.', 'Italian', 2284399520, 'Nita_Graves@justo.net', 'Tour guide', 'Credit Card');
+
+1 row created.
+
+AC_04_SQL>Insert Into Tourist  Values(18, 'Raya', 'Carr', '150 Arcu. Road', 'British', 9531150264, 'Raya@sed.net', 'Extra bed', 'Cash');
+
+1 row created.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL> /* Table Name: Proprietor	    */
+AC_04_SQL> /* Proprietor_Id, Fname, Sname, Address, County, Date_Of_Birth, Email, Mobile_No, Foreign_Language */
+AC_04_SQL>Insert Into Proprietor Values(1001, 'Brady', 'Pollard', '6107 Egestas Rd.', 'Clare', '26-Aug-1966', 'BradyPollard@adipiscing.ca', 7956962931, 'Dutch');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1002, 'Anne', 'Lambert', '2324 Non, Street', 'Kildare', '09-Sep-1995', 'AnneLambert@pharetra.edu', 3081559496, 'French');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1003, 'Cade', 'Rivas', '951-5328 At Av.', 'Donegal', '18-Oct-1959', 'CadeRivas@nonum.com', 1859454051, 'French');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1004, 'Geraldine', 'Wall', '4937 Sit Av.', 'Cork', '09-Jul-1978', 'GeraldineWall@amet.edu', 2168667111, 'Italian');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1005, 'Zelda', 'Logan', '8307 Neque Road', 'Mayo', '02-Apr-1965', 'ZeldaLogan@eueuis.co.uk', 8768223359, 'German');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1006, 'Pascale', 'Huffman', '524-5772 Et St.', 'Mayo', '20-Feb-1960', 'PascaleHuffman@lacinia.ca', 4198079528, 'French');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1007, 'Nicole', 'Whitley', '7308 Eu Av.', 'Donegal', '18-Jan-1974', 'NicoleWhitley@egestas.co.uk', 1024624547, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1008, 'Mary', 'Byrd', '889 Non Av.', 'Kildare', '12-Oct-1993', 'MaryByrd@semper.org', 2746680478, 'German');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1009, 'Chase', 'Tyson', '7111 Laoreet Rd.', 'Cork', '27-Aug-1974', 'ChaseTyson@neque.co.uk', 9101901194, 'Dutch');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1010, 'Zephania', 'Roy', '2771 Vehicula St.', 'Donegal', '26-Dec-1993', 'ZephaniaRoy@sodales.org', 2147498486, 'German');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1011, 'Sandra', 'Lynn', '3190 Interdum. Ave', 'Clare', '30-Oct-1995', 'SandraLynn@pellen.net', 2954244225, 'Italian');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1012, 'Eleanor', 'Golden', '358-2682 Curabitur St.', 'Mayo', '06-Jun-1988', 'EleanorGolden@orci.com', 8855282211, 'German');
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1013, 'Adria', 'Montgomery', '6336 Ligula. Avenue', 'Donegal', '28-Nov-1975', 'AdriaMontgomery@eget.org', 7383462382, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Proprietor Values(1014, 'Judith', 'Graves', '6102 Dictum Road', 'Kildare', '11-Jun-1998', 'JudithGraves@sem.org', 7935972556, 'French');
+
+1 row created.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL> /* Table Name: Cottage */
+AC_04_SQL> /*	  Cottage_Id,	  Cottage_Address, Town, County, Proprietor_Id, Grade, Special_Features, Num_Bedrooms, Heating, Year_Built, Type, Cost, Market_Value */
+AC_04_SQL>Insert Into Cottage  Values(101, '8967 Massa. Rd.', 'Newbridge', 'Kildare', 1004, '1 star', NULL, 10, 'Solid Fuel', 1920, 'Two Storey', 3000, 3400);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(102, '4000 Euismod Ave', 'Youghal', 'Cork', 1004, '5 star', 'TV', 50, 'Oil', 1968, 'Two Storey', 3000, 2200);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(103, '9932 Placerat. St.', 'Athlone', 'Westmeath', 1002, '5 star', 'Internet', 20, 'Gas', 1985, 'Dormer', 6500, 3400);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(104, '8354 Donec Road', 'Letterkeny', 'Donegal', 1007, '4 star', 'Sauna', 30, 'Gas',	  1875, 'Dormer', 7000, 8400);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(105, '8616 Vestibulum St.', 'Letterkeny', 'Donegal', 1009, '3 star', 'Sauna', 30, 'Solid Fuel', 1986, 'Bungalow', 3000, 3600);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(106, '7493 Iaculis Av.', 'Newbridge', 'Kildare', 1006, '4 star', 'TV', 20, 'Gas', 1915, 'Two Storey', 1000, 2200);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(107, '310-5914 Mauris St.', 'Athlone', 'Westmeath', 1010, '2 star', 'Internet', 40, 'Solid Fuel', 1908, 'Bungalow', 2000, 3600);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(108, '4643 Cursus Road', 'Youghal', 'Cork', 1012, '2 star', NULL, 20, 'Gas', 1960, 'Bungalow', 1500, 2400);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(109, '6311 Cursus, Road', 'Mullingar', 'Westmeath', 1004, '1 star', NULL, 20, 'Gas', 1965, 'Two Storey', 6000, 5500);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(110, '6167 Nulla Avenue', 'Lifford', 'Donegal', 1011, '1 star', 'TV', 10, 'Oil', 1926, 'Dormer', 1500, 3000);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(111, '7853 Elementum Street', 'Mullingar', 'Westmeath', 1010, '5 star', 'Sauna', 50, 'Solid Fuel', 1961, 'Dormer', 5000, 2600);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage	   Values(112, '5305 At, Rd.', 'Lifford', 'Donegal', 1008, '4 star', 'Internet', 10, 'Solid Fuel', 1961, 'Dormer', 1000, 2200);
+
+1 row created.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL> /* Table Name: Cottage_Rental  */
+AC_04_SQL> /*	  Cottage_Id,	  Rental_Date, Num_Nights, Num_Guests, Total_Due, Deposit_Paid, Pay_Method, Tourist_Id */
+AC_04_SQL>Insert Into Cottage_Rental Values(101, '14-Dec-2018', 1, 3, 699, 87, 'Cash', 10);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(107, '03-Jun-2019', 6, 9, 161, 62, 'Cash', 5);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(101, '12-Feb-2019', 5, 4, 901, 88, 'Cheque', 15);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(104, '06-Jul-2019', 2, 7, 588, 88, 'Cheque', 5);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(105, '16-May-2019', 4, 4, 298, 78, 'Credit Card', 2);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(110, '04-Oct-2018', 8, 2, 657, 65, 'Cheque', 12);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(111, '14-Jan-2019', 2, 8, 963, 63, 'Credit Card', 6);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(108, '27-Jan-2019', 9, 10, 879, 77, 'Credit Card', 4);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(109, '23-Oct-2019', 6, 3, 657, 67, 'Cheque', 5);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(110, '19-Mar-2019', 6, 8, 776, 54, 'Credit Card', 9);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(111, '17-Mar-2019', 9, 5, 149, 84, 'Cheque', 18);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(112, '27-Jul-2019', 10, 8, 549, 84, 'Credit Card', 8);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(110, '21-Nov-2019', 8, 8, 497, 75, 'Cash', 12);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(111, '25-Jul-2019', 10, 3, 607, 95, 'Cash',6);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Rental Values(105, '04-Aug-2019', 10, 1, 404, 78, 'Cash', 9);
+
+1 row created.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL> /* Table Name: Caretaker */
+AC_04_SQL> /*	  Caretaker_Id, FirstName, Surname, Address, Town, County, Nationality, Mobile_No, Email_Address, Hourly_Rate */
+AC_04_SQL>Insert Into Caretaker Values(100, 'Ivana', 'Murray', '2394 Magnis St.', 'Belfast', 'Antrim', 'French', 2044034174, 'Ivana_Murray@non.com', 11);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(200, 'Isadora', 'Hamilton', '5560 Vivamus Rd.', 'Lifford', 'Donegal', 'Italian', 5958812126, 'Isadora_Hamilton@velsapien.com', 28);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(300, 'Brynne', 'Morgan', '781-8597 Dictum Rd.', 'Naas', 'Kildare', 'British', 8894509557, 'Brynne_Morgan@Donec.net', 27);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(400, 'Pearl', 'Contreras', '9548 Amet, Street', 'Cork', 'Cork', 'Italian', 8924305239, 'Pearl_Contreras@etnetuset.co.uk', 11);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(500, 'Zelenia', 'Barry', '4872 Placerat St.', 'Lifford', 'Donegal', 'French', 889736247, 'Zelenia_Barry@sem.ca', 30);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(600, 'Lionel', 'Huffman', '6224 Id, Rd.', 'Ennis', 'Clare', 'Italian', 136447526, 'Lionel_Huffman@Curab.co.uk', 10);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(700, 'Judah', 'Coffey', '744 Eu Rd.', 'Mullingar', 'Westmeath', 'French', 5552745031, 'Judah_Coffey@augueut.com', 5);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(800, 'Fatima', 'Ellis', '222 Cras Rd.', 'Tullamore', 'Offaly', 'British', 4813677667, 'Fatima_Ellis@ante.co.uk', 18);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(900, 'Slade', 'Peters', '2299 Nunc St.', 'Belfast', 'Antrim', 'British', 3509879905, 'Slade_Peters@primisin.ca', 21);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(1000, 'Brenda', 'Hess', '8738 Magnis St.', 'Naas', 'Kildare', 'Italian', 7116732046, 'Brenda_Hess@massarutru.com', 14);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(1100, 'Keith', 'Welch', '832-1634 A, Rd.', 'Cork', 'Cork', 'French', 9854771831, 'Keith_Welch@ultric.edu', 29);
+
+1 row created.
+
+AC_04_SQL>Insert Into Caretaker Values(1200, 'Giacomo', 'Huffman', '2071 Dignissim St.', 'Lifford', 'Donegal', 'Irish', 2007498283, 'Giacomo_Huffman@amet.com', 19);
+
+1 row created.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL> /*  Table Name:	  Cottage_Cleaning */
+AC_04_SQL> /*  Cottage_Id, Caretaker_Id, Date_Cleaned, Time_Taken, Details */
+AC_04_SQL>Insert Into Cottage_Cleaning Values(101, '1000', '09-Dec-2019', 12, 'Not cleaned properly');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (110, '600', '16-Jun-2019', 5,'Property damage');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (107, '800', '23-Jul-2019', 19, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (102, '300', '02-May-2019', 10, 'Property damage');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (109, '1100', '12-Jun-2019', 20, 'Item stolen');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (105, '200', '15-Jun-2019', 7, 'Item stolen');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (108, '300', '30-Jun-2019', 9, 'Item stolen');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (109, '200', '20-Jun-2019', 7, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (111, '300', '17-May-2019', 14, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (101, '500', '18-Jul-2019', 7, 'Property damage');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (107, '100', '14-Jul-2019', 6, 'Property damage');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (112, '300', '07-Apr-2019', 12, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (106, '600', '26-Apr-2019', 19, 'Item stolen');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (110, '900', '31-Dec-2019', 7, 'Not cleaned properly');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (101, '900', '07-Oct-2019', 17, 'Item stolen');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (109, '700', '20-Aug-2019', 10, NULL);
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (109, '900', '08-Jun-2019', 7, 'Property damage');
+
+1 row created.
+
+AC_04_SQL>Insert Into Cottage_Cleaning Values (103, '300', '02-Feb-2019', 19, NULL);
+
+1 row created.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL>Select Count(*) From Tourist;
+
+  COUNT(*)                                                                                                                                                                          
+----------                                                                                                                                                                          
+        18                                                                                                                                                                          
+
+1 row selected.
+
+AC_04_SQL>Select Count(*) From Proprietor;
+
+  COUNT(*)                                                                                                                                                                          
+----------                                                                                                                                                                          
+        14                                                                                                                                                                          
+
+1 row selected.
+
+AC_04_SQL>Select Count(*) From Cottage;
+
+  COUNT(*)                                                                                                                                                                          
+----------                                                                                                                                                                          
+        12                                                                                                                                                                          
+
+1 row selected.
+
+AC_04_SQL>Select Count(*) From Cottage_Rental;
+
+  COUNT(*)                                                                                                                                                                          
+----------                                                                                                                                                                          
+        15                                                                                                                                                                          
+
+1 row selected.
+
+AC_04_SQL>Select Count(*) From Caretaker;
+
+  COUNT(*)                                                                                                                                                                          
+----------                                                                                                                                                                          
+        12                                                                                                                                                                          
+
+1 row selected.
+
+AC_04_SQL>Select Count(*) From Cottage_Cleaning;
+
+  COUNT(*)                                                                                                                                                                          
+----------                                                                                                                                                                          
+        18                                                                                                                                                                          
+
+1 row selected.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL>Commit;
+
+Commit complete.
+
+AC_04_SQL>Spool off

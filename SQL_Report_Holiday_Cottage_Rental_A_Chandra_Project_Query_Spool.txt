@@ -1,0 +1,495 @@
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select FirstName, LastName, Telephone_No, Nationality, Special_Needs, Pay_Method
+  2  From Tourist
+  3  Where Special_Needs In ('Extra bed', 'Tour guide')
+  4  And Pay_Method = 'Cash'
+  5  Order By Nationality;
+
+FIRSTNAME  LASTNAME   TELEPHONE_NO NATIONA SPECIAL_NEEDS     PAY_METHOD                                                                                                             
+---------- ---------- ------------ ------- ----------------- -----------                                                                                                            
+Mohammad   Wheeler      9988096309 British Tour guide        Cash                                                                                                                   
+Raya       Carr         9531150264 British Extra bed         Cash                                                                                                                   
+Rina       English      4715423628 Irish   Extra bed         Cash                                                                                                                   
+
+3 rows selected.
+
+AC_04_SQL> Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select C.Cottage_Id, C.Town, C.Grade, C.Market_Value, P.Fname, P.Email
+  2  From Proprietor P, Cottage C
+  3  Where P.Proprietor_Id = C.Proprietor_Id
+  4  And P.Fname Like 'A%'
+  5  Order By P.Fname;
+
+COTTAGE_ID TOWN       GRADE  MARKET_VALUE FNAME     EMAIL                                                                                                                           
+---------- ---------- ------ ------------ --------- ---------------------------                                                                                                     
+       103 Athlone    5 star         3400 Anne      AnneLambert@pharetra.edu                                                                                                        
+
+1 row selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select CT.Firstname, CT.Surname, CT.Town, CT.Hourly_Rate, CC.Time_Taken, CC.Details
+  2  From Caretaker CT, Cottage_Cleaning CC
+  3  Where CT.Caretaker_Id = CC.Caretaker_Id
+  4  And CC.Time_Taken > 10
+  5  And CC.Details = 'Item stolen'
+  6  Order By CT.Surname Desc;
+
+FIRSTNA SURNAME   TOWN      HOURLY_RATE TIME_TAKEN DETAILS                                                                                                                          
+------- --------- --------- ----------- ---------- --------------------                                                                                                             
+Keith   Welch     Cork               29         20 Item stolen                                                                                                                      
+Slade   Peters    Belfast            21         17 Item stolen                                                                                                                      
+Lionel  Huffman   Ennis              10         19 Item stolen                                                                                                                      
+
+3 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select CC.Cottage_Id, CC.Date_Cleaned, C.Num_Bedrooms, C.Heating, P.Sname, P.County
+  2  From Proprietor P, Cottage C, Cottage_Cleaning CC
+  3  Where P.Proprietor_Id = C.Proprietor_Id
+  4  And C.Cottage_Id = CC.Cottage_Id
+  5  And C.Num_Bedrooms >= 30
+  6  And P.County In ('Donegal', 'Cork')
+  7  Order By C.Num_Bedrooms, CC.Date_Cleaned;
+
+COTTAGE_ID DATE_CLEA NUM_BEDROOMS HEATING    SNAME      COUNTY                                                                                                                      
+---------- --------- ------------ ---------- ---------- -------                                                                                                                     
+       105 15-JUN-19           30 Solid Fuel Tyson      Cork                                                                                                                        
+       107 14-JUL-19           40 Solid Fuel Roy        Donegal                                                                                                                     
+       107 23-JUL-19           40 Solid Fuel Roy        Donegal                                                                                                                     
+       102 02-MAY-19           50 Oil        Wall       Cork                                                                                                                        
+       111 17-MAY-19           50 Solid Fuel Roy        Donegal                                                                                                                     
+
+5 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select CT.Firstname, CT.Mobile_No, CT.Hourly_Rate, C.Num_Bedrooms
+  2  From Caretaker CT, Cottage C, Cottage_Cleaning CC
+  3  Where CT.Caretaker_Id = CC.Caretaker_Id
+  4  And CC.Cottage_Id = C.Cottage_Id
+  5  And CT.Hourly_Rate < C.Num_Bedrooms
+  6  Order By CT.Hourly_Rate Desc;
+
+FIRSTNA  MOBILE_NO HOURLY_RATE NUM_BEDROOMS                                                                                                                                         
+------- ---------- ----------- ------------                                                                                                                                         
+Isadora 5958812126          28           30                                                                                                                                         
+Brynne  8894509557          27           50                                                                                                                                         
+Brynne  8894509557          27           50                                                                                                                                         
+Fatima  4813677667          18           40                                                                                                                                         
+Ivana   2044034174          11           40                                                                                                                                         
+Lionel   136447526          10           20                                                                                                                                         
+Judah   5552745031           5           20                                                                                                                                         
+
+7 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select Cottage_Id, Cottage_Address, Town, County, Grade, Special_Features, Num_Bedrooms, Heating, Type
+  2  From Cottage
+  3  Where Grade Not In ('1 star', '2 star')
+  4  And Proprietor_Id In
+  5  (Select Proprietor_Id
+  6  From Proprietor
+  7  Where Foreign_Language In ('Dutch', 'German')
+  8  And Date_Of_Birth > '01-Jan-1990')
+  9  Order By Grade Desc;
+
+COTTAGE_ID COTTAGE_ADDRESS       TOWN       COUNTY    GRADE  SPECIAL_ NUM_BEDROOMS HEATING    TYPE                                                                                  
+---------- --------------------- ---------- --------- ------ -------- ------------ ---------- ----------                                                                            
+       111 7853 Elementum Street Mullingar  Westmeath 5 star Sauna              50 Solid Fuel Dormer                                                                                
+       112 5305 At, Rd.          Lifford    Donegal   4 star Internet           10 Solid Fuel Dormer                                                                                
+
+2 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select T.FirstName, T.LastName, T.Special_Needs, CR.Deposit_Paid, CR.Pay_Method
+  2  From Tourist T, Cottage_Rental CR
+  3  Where T.Tourist_Id = CR.Tourist_Id
+  4  And CR.Pay_Method = 'Cash'
+  5  And CR.Deposit_Paid =
+  6  (Select Max(Deposit_Paid)
+  7  From Cottage_Rental
+  8  Where Pay_Method = 'Cash');
+
+FIRSTNAME  LASTNAME   SPECIAL_NEEDS     DEPOSIT_PAID PAY_METHOD                                                                                                                     
+---------- ---------- ----------------- ------------ -----------                                                                                                                    
+Raya       Hall       Vehicle with ramp           95 Cash                                                                                                                           
+
+1 row selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select T1.LastName, T1.Nationality, T1.Special_Needs, T2.LastName, T2.Nationality, T2.Special_Needs
+  2  From Tourist T1, Tourist T2
+  3  Where T1.Nationality = T2.Nationality
+  4  And T1.Special_Needs Is Not Null
+  5  And T2.Special_Needs Is Not Null
+  6  And T1.Tourist_Id < T2.Tourist_Id
+  7  Order By T1.LastName;
+
+LASTNAME   NATIONA SPECIAL_NEEDS     LASTNAME   NATIONA SPECIAL_NEEDS                                                                                                               
+---------- ------- ----------------- ---------- ------- -----------------                                                                                                           
+Blackwell  British Wheelchair        Carr       British Extra bed                                                                                                                   
+Boyer      German  Extra bed         Alvarez    German  Vehicle with ramp                                                                                                           
+English    Irish   Extra bed         Hall       Irish   Vehicle with ramp                                                                                                           
+English    Irish   Extra bed         Morton     Irish   Extra bed                                                                                                                   
+Hall       Irish   Vehicle with ramp Morton     Irish   Extra bed                                                                                                                   
+Peck       German  Extra bed         Alvarez    German  Vehicle with ramp                                                                                                           
+Peck       German  Extra bed         Boyer      German  Extra bed                                                                                                                   
+Wheeler    British Tour guide        Blackwell  British Wheelchair                                                                                                                  
+Wheeler    British Tour guide        Carr       British Extra bed                                                                                                                   
+
+9 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select T.Nationality, Min(CR.Deposit_Paid) As Min_Deposit, Round(Avg(CR.Deposit_Paid), 2) As Avg_Deposit, Max(CR.Deposit_Paid) As Max_Deposit, Max(CR.Deposit_Paid) - Min(CR.Deposit_Paid) As Range
+  2  From Tourist T, Cottage_Rental CR
+  3  Where T.Tourist_Id = CR.Tourist_Id
+  4  Group By T.Nationality
+  5  Order By T.Nationality;
+
+NATIONA MIN_DEPOSIT AVG_DEPOSIT MAX_DEPOSIT      RANGE                                                                                                                              
+------- ----------- ----------- ----------- ----------                                                                                                                              
+British          65        80.5          88         23                                                                                                                              
+French           78          78          78          0                                                                                                                              
+German           54       69.67          78         24                                                                                                                              
+Irish            63          79          95         32                                                                                                                              
+Italian          62       72.33          88         26                                                                                                                              
+
+5 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select Fname, Sname
+  2  From Proprietor
+  3  Where Proprietor_Id In
+  4  (Select Proprietor_Id
+  5  From Cottage
+  6  Where Num_Bedrooms = 20
+  7  And Cost < 6500
+  8  And Exists
+  9  (Select *
+ 10  From Cottage_Rental
+ 11  Where Cottage.Cottage_Id = Cottage_Rental.Cottage_Id));
+
+FNAME     SNAME                                                                                                                                                                     
+--------- ----------                                                                                                                                                                
+Geraldine Wall                                                                                                                                                                      
+Eleanor   Golden                                                                                                                                                                    
+
+2 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select Cottage_Id, Grade, Cost
+  2  From Cottage
+  3  Where Cost > 2000
+  4  And Cottage_Id In
+  5  (Select Cottage_Id
+  6  From Cottage_Rental
+  7  Where Num_Nights > 5
+  8  And Total_Due <
+  9  (Select Avg(Total_Due)
+ 10  From Cottage_Rental))
+ 11  And Cottage_Id In
+ 12  (Select Cottage_Id
+ 13  From Cottage_Cleaning
+ 14  Where Details Is Null
+ 15  And Time_Taken >
+ 16  (Select Avg(Time_Taken)
+ 17  From Cottage_Cleaning))
+ 18  And Proprietor_Id In
+ 19  (Select Proprietor_Id
+ 20  From Proprietor
+ 21  Where County In ('Donegal', 'Kildare')
+ 22  And Fname Not Like 'C%');
+
+COTTAGE_ID GRADE        COST                                                                                                                                                        
+---------- ------ ----------                                                                                                                                                        
+       111 5 star       5000                                                                                                                                                        
+
+1 row selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select Caretaker_Id, Hourly_Rate, Nationality
+  2  From Caretaker
+  3  Where Caretaker_Id In
+  4  (Select Caretaker_Id
+  5  From Cottage_Cleaning
+  6  Group By Caretaker_Id
+  7  Having Count(Details) <= 1)
+  8  And Nationality In ('French', 'Italian');
+
+CARETAKER_ID HOURLY_RATE NATIONA                                                                                                                                                    
+------------ ----------- -------                                                                                                                                                    
+         100          11 French                                                                                                                                                     
+         200          28 Italian                                                                                                                                                    
+         500          30 French                                                                                                                                                     
+         700           5 French                                                                                                                                                     
+        1000          14 Italian                                                                                                                                                    
+        1100          29 French                                                                                                                                                     
+
+6 rows selected.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL>Update Caretaker
+  2  Set Hourly_Rate = Hourly_Rate + 10
+  3  Where Caretaker_Id In
+  4  (Select Caretaker_Id
+  5  From Cottage_Cleaning
+  6  Group By Caretaker_Id
+  7  Having Count(Details) <= 1)
+  8  And Nationality In ('French', 'Italian');
+
+6 rows updated.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL>Select Caretaker_Id, Hourly_Rate, Nationality
+  2  From Caretaker
+  3  Where Caretaker_Id In
+  4  (Select Caretaker_Id
+  5  From Cottage_Cleaning
+  6  Group By Caretaker_Id
+  7  Having Count(Details) <= 1)
+  8  And Nationality In ('French', 'Italian');
+
+CARETAKER_ID HOURLY_RATE NATIONA                                                                                                                                                    
+------------ ----------- -------                                                                                                                                                    
+         100          21 French                                                                                                                                                     
+         200          38 Italian                                                                                                                                                    
+         500          40 French                                                                                                                                                     
+         700          15 French                                                                                                                                                     
+        1000          24 Italian                                                                                                                                                    
+        1100          39 French                                                                                                                                                     
+
+6 rows selected.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL>Rollback;
+
+Rollback complete.
+
+AC_04_SQL>
+AC_04_SQL>
+AC_04_SQL>Select Caretaker_Id, Hourly_Rate, Nationality
+  2  From Caretaker
+  3  Where Caretaker_Id In
+  4  (Select Caretaker_Id
+  5  From Cottage_Cleaning
+  6  Group By Caretaker_Id
+  7  Having Count(Details) <= 1)
+  8  And Nationality In ('French', 'Italian');
+
+CARETAKER_ID HOURLY_RATE NATIONA                                                                                                                                                    
+------------ ----------- -------                                                                                                                                                    
+         100          11 French                                                                                                                                                     
+         200          28 Italian                                                                                                                                                    
+         500          30 French                                                                                                                                                     
+         700           5 French                                                                                                                                                     
+        1000          14 Italian                                                                                                                                                    
+        1100          29 French                                                                                                                                                     
+
+6 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select *
+  2  From Cottage_Rental
+  3  Where Deposit_Paid < 75
+  4  And Cottage_Id In
+  5  (Select Cottage_Id
+  6  From Cottage
+  7  Where Special_Features Is Null);
+
+COTTAGE_ID RENTAL_DA NUM_NIGHTS NUM_GUESTS  TOTAL_DUE DEPOSIT_PAID PAY_METHOD  TOURIST_ID                                                                                           
+---------- --------- ---------- ---------- ---------- ------------ ----------- ----------                                                                                           
+       109 23-OCT-19          6          3        657           67 Cheque               5                                                                                           
+
+1 row selected.
+
+AC_04_SQL>
+AC_04_SQL>Delete
+  2  From Cottage_Rental
+  3  Where Deposit_Paid < 75
+  4  And Cottage_Id In
+  5  (Select Cottage_Id
+  6  From Cottage
+  7  Where Special_Features Is Null);
+
+1 row deleted.
+
+AC_04_SQL>
+AC_04_SQL>Select *
+  2  From Cottage_Rental
+  3  Where Deposit_Paid < 75
+  4  And Cottage_Id In
+  5  (Select Cottage_Id
+  6  From Cottage
+  7  Where Special_Features Is Null);
+
+no rows selected
+
+AC_04_SQL>
+AC_04_SQL>Rollback;
+
+Rollback complete.
+
+AC_04_SQL>
+AC_04_SQL>Select *
+  2  From Cottage_Rental
+  3  Where Deposit_Paid < 75
+  4  And Cottage_Id In
+  5  (Select Cottage_Id
+  6  From Cottage
+  7  Where Special_Features Is Null);
+
+COTTAGE_ID RENTAL_DA NUM_NIGHTS NUM_GUESTS  TOTAL_DUE DEPOSIT_PAID PAY_METHOD  TOURIST_ID                                                                                           
+---------- --------- ---------- ---------- ---------- ------------ ----------- ----------                                                                                           
+       109 23-OCT-19          6          3        657           67 Cheque               5                                                                                           
+
+1 row selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select FirstName, LastName, Address
+  2  From Tourist
+  3  Union
+  4  Select Fname, Sname, Address
+  5  From Proprietor
+  6  Where County = 'Cork'
+  7  Union
+  8  Select Firstname, Surname, Address
+  9  From Caretaker
+ 10  Where County = 'Cork'
+ 11  Order By 1;
+
+FIRSTNAME  LASTNAME   ADDRESS                                                                                                                                                       
+---------- ---------- ----------------------                                                                                                                                        
+Ashely     Bolton     368 Molestie St.                                                                                                                                              
+Chase      Tyson      7111 Laoreet Rd.                                                                                                                                              
+Desirae    Peck       3966 Aliquet. Av.                                                                                                                                             
+Florence   Mckenzie   96 Diam St.                                                                                                                                                   
+Geraldine  Wall       4937 Sit Av.                                                                                                                                                  
+Ivan       Grimes     8421 Nunc Ave                                                                                                                                                 
+Jada       Maxwell    7181 Trist Avenue                                                                                                                                             
+Joan       Logan      8657 Nunc Street                                                                                                                                              
+Julian     Blackwell  9645 In St.                                                                                                                                                   
+Karen      Thornton   9411 Euismode Street                                                                                                                                          
+Keith      Welch      832-1634 A, Rd.                                                                                                                                               
+Lyle       Boyer      5718 Ante Ave                                                                                                                                                 
+Mercedes   Rasemussen 6943 Tempus Av.                                                                                                                                               
+Mohammad   Wheeler    1934 Quisque Road                                                                                                                                             
+Nita       Graves     990 Nullam Rd.                                                                                                                                                
+Pearl      Contreras  9548 Amet, Street                                                                                                                                             
+Quinttessa Morton     9216 Quam. Rd.                                                                                                                                                
+Raya       Carr       150 Arcu. Road                                                                                                                                                
+Raya       Hall       92 Eleifend Rd.                                                                                                                                               
+Rina       English    2420 Semper Rd.                                                                                                                                               
+Vanna      Alvarez    4596 Sit Rd.                                                                                                                                                  
+Wesley     Berg       3460 Enim, Rd.                                                                                                                                                
+
+22 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Drop View Rental1;
+
+View dropped.
+
+AC_04_SQL>
+AC_04_SQL>Create View Rental1 As
+  2  Select Cottage_Id, Tourist_Id, Total_Due, Deposit_Paid, Total_Due + Deposit_Paid As Total_Amt
+  3  From Cottage_Rental
+  4  Where Tourist_Id In
+  5  (Select Tourist_Id
+  6  From Tourist
+  7  Where Nationality In ('German', 'French'))
+  8  And Cottage_Id In
+  9  (Select Cottage_Id
+ 10  From Cottage
+ 11  Where County Not In ('Westmeath', 'Kildare'))
+ 12  With Read Only;
+
+View created.
+
+AC_04_SQL>
+AC_04_SQL>Select *
+  2  From Rental1;
+
+COTTAGE_ID TOURIST_ID  TOTAL_DUE DEPOSIT_PAID  TOTAL_AMT                                                                                                                            
+---------- ---------- ---------- ------------ ----------                                                                                                                            
+       105          2        298           78        376                                                                                                                            
+       108          4        879           77        956                                                                                                                            
+       105          9        404           78        482                                                                                                                            
+       110          9        776           54        830                                                                                                                            
+
+4 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select *
+  2  From Rental1
+  3  Where Total_Amt > 500;
+
+COTTAGE_ID TOURIST_ID  TOTAL_DUE DEPOSIT_PAID  TOTAL_AMT                                                                                                                            
+---------- ---------- ---------- ------------ ----------                                                                                                                            
+       108          4        879           77        956                                                                                                                            
+       110          9        776           54        830                                                                                                                            
+
+2 rows selected.
+
+AC_04_SQL>Cl scr
+
+AC_04_SQL>
+AC_04_SQL>Select P.Fname, C.Cottage_Id, Sum(C.Cost)
+  2  From Proprietor P, Cottage C
+  3  Where P.Proprietor_Id = C.Proprietor_Id
+  4  And P.Fname Like '%e'
+  5  Group By Rollup (P.Fname,C.Cottage_Id)
+  6  Order By P.Fname;
+
+FNAME     COTTAGE_ID SUM(C.COST)                                                                                                                                                    
+--------- ---------- -----------                                                                                                                                                    
+Anne             103        6500                                                                                                                                                    
+Anne                        6500                                                                                                                                                    
+Chase            105        3000                                                                                                                                                    
+Chase                       3000                                                                                                                                                    
+Geraldine        101        3000                                                                                                                                                    
+Geraldine        102        3000                                                                                                                                                    
+Geraldine        109        6000                                                                                                                                                    
+Geraldine                  12000                                                                                                                                                    
+Nicole           104        7000                                                                                                                                                    
+Nicole                      7000                                                                                                                                                    
+Pascale          106        1000                                                                                                                                                    
+Pascale                     1000                                                                                                                                                    
+                           29500                                                                                                                                                    
+
+13 rows selected.
+
+AC_04_SQL>Spool off
